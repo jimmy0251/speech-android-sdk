@@ -48,11 +48,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 // IBM Watson SDK
 import com.ibm.watson.developer_cloud.android.speech_to_text.v1.dto.SpeechConfiguration;
 import com.ibm.watson.developer_cloud.android.speech_to_text.v1.ISpeechDelegate;
 import com.ibm.watson.developer_cloud.android.speech_to_text.v1.SpeechToText;
+import com.ibm.watson.developer_cloud.android.text_to_speech.v1.TTSPlayCompletionListener;
 import com.ibm.watson.developer_cloud.android.text_to_speech.v1.TextToSpeech;
 import com.ibm.watson.developer_cloud.android.speech_common.v1.TokenProvider;
 
@@ -433,7 +435,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public static class FragmentTabTTS extends Fragment {
+    public static class FragmentTabTTS extends Fragment implements TTSPlayCompletionListener {
 
         public View mView = null;
         public Context mContext = null;
@@ -524,7 +526,7 @@ public class MainActivity extends Activity {
             }
 
             TextToSpeech.sharedInstance().setVoice(getString(R.string.voiceDefault));
-
+            TextToSpeech.sharedInstance().setPlayCompletionListener(this);
             return true;
         }
 
@@ -548,6 +550,11 @@ public class MainActivity extends Activity {
             spannable2.setSpan(new CustomTypefaceSpan("", notosans), 0, strInstructions.length(), 0);
             viewInstructions.setText(spannable2);
             viewInstructions.setTextColor(0xFF121212);
+        }
+
+        @Override
+        public void onPlayCompleted(String text) {
+            Toast.makeText(getActivity(), "Play completed : " + text, Toast.LENGTH_SHORT).show();
         }
 
         public class ItemVoice {
